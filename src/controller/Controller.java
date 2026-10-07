@@ -1,34 +1,40 @@
 package controller;
 
+import view.View;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Controller implements ControllerInterface {
 
-    private final List<String> activeFeatures;
+    private final View view;
 
-    public Controller() {
-        activeFeatures = new ArrayList<>();
+    public Controller(View view) {
+        this.view = view;
     }
 
     @Override
     public int activate(String[] deactivations, String[] activations) {
+        //todo
         return 0;
     }
 
     @Override
     public boolean enableUIView() {
+        //todo
         return false;
     }
 
     @Override
     public boolean disableUIView() {
+        //todo
         return false;
     }
 
     @Override
     public String[] getStateAsLog() {
+        //todo
         return new String[0];
     }
 
@@ -39,36 +45,24 @@ public class Controller implements ControllerInterface {
         System.out.println("\tquit");
     }
 
-    private void printState() {
-        if (activeFeatures.isEmpty()) {
-            System.out.println("No active features.");
-            return;
-        }
-
-        for (String feature : activeFeatures) {
-            System.out.println(feature);
-        }
-    }
-
     public void run() {
         Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Smart Learning App");
-        System.out.println("Type 'help' to see the available commands.");
-
         boolean running = true;
 
+        view.showWelcomeMessage();
+
         while (running) {
-            System.out.print("> ");
+            view.showPrompt();
+
             String command = scanner.nextLine().trim();
 
-            switch (command) {
+            switch (command.toLowerCase()) {
                 case "help":
-                    printHelp();
+                    view.showHelp();
                     break;
 
                 case "state":
-                    printState();
+                    view.showState(getStateAsLog());
                     break;
 
                 case "quit":
@@ -76,9 +70,12 @@ public class Controller implements ControllerInterface {
                     break;
 
                 default:
-                    System.out.println("Unknown command.");
+                    view.showError("Unknown command.");
                     break;
             }
         }
+
+        scanner.close();
+        view.showMessage("Application stopped.");
     }
 }
